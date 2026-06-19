@@ -1,0 +1,148 @@
+package com.projectnik;
+
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+public class Main {
+    static Scanner sc = new Scanner(System.in);
+    static Biblioteca biblioteca =  new Biblioteca();
+
+    static void main() {
+
+        while (true) {
+
+            try {
+
+                System.out.print("""
+                        -------------------------------
+                        Biblioteca online
+                        
+                        [1] Adicionar livro
+                        [2] Remover livro
+                        [3] Fazer emprestimo
+                        [4] Listar os empréstimos
+                        [5] Listar os livros
+                        [6] Listar tudo
+                        [0] Encerrar programa
+                        -------------------------------
+                        """);
+                System.out.print("Digite -> ");
+                int o = sc.nextInt();
+                sc.nextLine();
+                System.out.println("-------------------------------");
+
+                switch (o) {
+
+                    case 1 -> addLivro();
+                    case 2 -> removeLivro();
+                    case 3 -> fazerEmprestimo();
+                    case 4 -> listarEmprestimos();
+                    case 5 -> listarAcervos();
+                    case 6 -> listarTudo();
+                    case 0 -> encerrar();
+                    default -> System.out.println("Opção Inválida");
+                }
+            }catch (InputMismatchException e) {
+                System.out.println("\\\\\\\\\\ Erro ao digitar, insira um valor válido! /////");
+                sc.nextLine();
+            }
+        }
+    }
+
+    static void addLivro() {
+
+        System.out.print("Digite o nome do livro: ");
+        String titulo = sc.nextLine();
+
+        System.out.print("Existe um autor? [1] Sim / [2] Não\n -> ");
+        int e = sc.nextInt();
+        sc.nextLine();
+
+        if (e == 1) {
+            System.out.print("Nome do autor: ");
+            String nomeAutor = sc.nextLine();
+
+            System.out.print("Nacionalidade do autor: ");
+            String nacionalidadeAutor = sc.nextLine();
+
+            Autor autor = new Autor(nomeAutor, nacionalidadeAutor);
+            Livro livro = new Livro(titulo, autor);
+            biblioteca.adicionarLivro(livro);
+
+        }else if (e == 2) {
+            Livro livro = new Livro(titulo, null);
+            biblioteca.adicionarLivro(livro);
+
+        }else{
+            System.out.println("Erro ao adicionar o autor");
+            addLivro();
+        }
+    }
+
+    static void removeLivro() {
+        if (biblioteca.acervoVazio()){
+            System.out.println("Não há livros para remover");
+            return;
+        }
+        biblioteca.listarAcervo();
+        System.out.print("Qual posição do livro que deseja remover?\n-> ");
+        int p =  sc.nextInt();
+        sc.nextLine();
+
+        biblioteca.removerLivro(p-1);
+        System.out.println("Livro removido com sucesso!");
+    }
+
+    static void fazerEmprestimo() {
+
+        if  (biblioteca.acervoVazio()){
+            System.out.println("Não há livros para fazer emprestimo");
+            return;
+        }
+        biblioteca.listarAcervo();
+        System.out.print("Qual livro deseja fazer o emprestimo?\n-> ");
+        int e =  sc.nextInt();
+        sc.nextLine();
+
+        System.out.print("Usuário: ");
+        String usuario = sc.nextLine();
+
+        System.out.print("Data de Emprestimo: ");
+        String dataEmprestimo = sc.nextLine();
+
+
+        biblioteca.realizarEmprestimo(e-1, usuario, dataEmprestimo);
+    }
+
+    static  void listarEmprestimos() {
+        if (biblioteca.emprestimoVazio()){
+            System.out.println("Não há emprestimos para listar");
+            return;
+        }
+
+        biblioteca.listarAcervo();
+    }
+
+    static void listarAcervos() {
+        if (biblioteca.acervoVazio()){
+            System.out.println("Não livros para listar");
+            return;
+        }
+
+        biblioteca.listarAcervo();
+    }
+
+    static void listarTudo() {
+        if (biblioteca.acervoVazio() && biblioteca.emprestimoVazio()){
+            System.out.println("Não há livros e emprestimos para listar");
+            return;
+        }
+        biblioteca.listarAcervo();
+        biblioteca.listarEmprestimos();
+    }
+
+    static void  encerrar() {
+        System.out.println("Encerrando o programa!");
+        System.exit(0);
+    }
+}
