@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Biblioteca {
-    private List<Livro> emprestimos;
+    private List<Emprestimo> emprestimos;
     private List<Livro> acervo;
 
     public Biblioteca(){
-        this.emprestimos = new ArrayList<Livro>();
+        this.emprestimos = new ArrayList<>();
         this.acervo = new ArrayList<>();
     }
 
@@ -22,7 +22,7 @@ public class Biblioteca {
 
     public void realizarEmprestimo(int escolha, String usuario, String data){
         Livro livroEscolhido = acervo.get(escolha);
-        emprestimos.add(livroEscolhido);
+        emprestimos.add(new Emprestimo(livroEscolhido, usuario, data));
     }
 
     public boolean acervoVazio(){

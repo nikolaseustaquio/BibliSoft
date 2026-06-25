@@ -94,24 +94,32 @@ public class Main {
     }
 
     static void fazerEmprestimo() {
+        String usuario = "";
+        String tituloTentado = "";
+        try {
+            if (biblioteca.acervoVazio()) {
+                throw new RuntimeException("Acervo vazio");
+            }
+            biblioteca.listarAcervo();
+            System.out.print("Qual livro deseja fazer o emprestimo?\n-> ");
+            int e = sc.nextInt();
+            sc.nextLine();
 
-        if  (biblioteca.acervoVazio()){
-            System.out.println("Não há livros para fazer emprestimo");
-            return;
+            System.out.print("Usuário: ");
+            usuario = sc.nextLine();
+
+            System.out.print("Data de Emprestimo: ");
+            String dataEmprestimo = sc.nextLine();
+
+            biblioteca.realizarEmprestimo(e - 1, usuario, dataEmprestimo);
+            tituloTentado = "sucesso";
+        }catch (RuntimeException e){
+            tituloTentado = "falha: " + e.getMessage();
+        }finally {
+            System.out.println("[LOG] Tentativa de empréstimo - usuário: " +
+                    (usuario.isEmpty() ? "não informado" : usuario)
+                    + "| status: " + tituloTentado);
         }
-        biblioteca.listarAcervo();
-        System.out.print("Qual livro deseja fazer o emprestimo?\n-> ");
-        int e =  sc.nextInt();
-        sc.nextLine();
-
-        System.out.print("Usuário: ");
-        String usuario = sc.nextLine();
-
-        System.out.print("Data de Emprestimo: ");
-        String dataEmprestimo = sc.nextLine();
-
-
-        biblioteca.realizarEmprestimo(e-1, usuario, dataEmprestimo);
     }
 
     static  void listarEmprestimos() {
