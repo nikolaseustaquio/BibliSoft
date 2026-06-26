@@ -49,16 +49,33 @@ public class Main {
         }
     }
 
-    static void addLivro() {
-
+    private static void addLivro() {
+        boolean validacao = false;
+        int opcUsuario = 0;
         System.out.print("Digite o nome do livro: ");
         String titulo = sc.nextLine();
 
-        System.out.print("Existe um autor? [1] Sim / [2] Não\n -> ");
-        int e = sc.nextInt();
-        sc.nextLine();
+        while (!validacao) {
+            try {
+                System.out.print("Existe um autor? [1] Sim / [2] Não\n -> ");
+                opcUsuario = sc.nextInt();
+                sc.nextLine();
+                if (opcUsuario == 1 || opcUsuario == 2){
+                    validacao = true;
+                }else{
+                    throw new IllegalArgumentException("Opção inválida! Digite as opções: (1) ou (2).");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Valor inválido. Tente novamente");
+                sc.nextLine();
+            } catch (IllegalArgumentException e){
+                System.out.println("Erro: " + e.getMessage());
+            } catch (Exception e){
+                System.out.println("Erro inesperado no sistema. Tente novamente!");
+            }
+        }
 
-        if (e == 1) {
+        if (opcUsuario == 1) {
             System.out.print("Nome do autor: ");
             String nomeAutor = sc.nextLine();
 
@@ -69,17 +86,14 @@ public class Main {
             Livro livro = new Livro(titulo, autor);
             biblioteca.adicionarLivro(livro);
 
-        }else if (e == 2) {
+        }else {
             Livro livro = new Livro(titulo, null);
             biblioteca.adicionarLivro(livro);
 
-        }else{
-            System.out.println("Erro ao adicionar o autor");
-            addLivro();
         }
     }
 
-    static void removeLivro() {
+    private static void removeLivro() {
         if (biblioteca.acervoVazio()){
             System.out.println("Não há livros para remover");
             return;
@@ -93,7 +107,7 @@ public class Main {
         System.out.println("Livro removido com sucesso!");
     }
 
-    static void fazerEmprestimo() {
+    private static void fazerEmprestimo() {
         String usuario = "";
         String tituloTentado = "";
         try {
@@ -122,7 +136,7 @@ public class Main {
         }
     }
 
-    static  void listarEmprestimos() {
+    private static  void listarEmprestimos() {
         if (biblioteca.emprestimoVazio()){
             System.out.println("Não há emprestimos para listar");
             return;
@@ -131,7 +145,7 @@ public class Main {
         biblioteca.listarAcervo();
     }
 
-    static void listarAcervos() {
+    private static void listarAcervos() {
         if (biblioteca.acervoVazio()){
             System.out.println("Não livros para listar");
             return;
@@ -140,7 +154,7 @@ public class Main {
         biblioteca.listarAcervo();
     }
 
-    static void listarTudo() {
+    private static void listarTudo() {
         if (biblioteca.acervoVazio() && biblioteca.emprestimoVazio()){
             System.out.println("Não há livros e emprestimos para listar");
             return;
@@ -149,7 +163,7 @@ public class Main {
         biblioteca.listarEmprestimos();
     }
 
-    static void  encerrar() {
+    private static void  encerrar() {
         System.out.println("Encerrando o programa!");
         System.exit(0);
     }
