@@ -12,8 +12,11 @@ public class Biblioteca {
         this.acervo = new ArrayList<>();
     }
 
-    public void adicionarLivro(Livro livro){
-        this.acervo.add(livro);
+    public void adicionarLivro(Livro livro) throws LivroDuplicadoException{
+        if (buscarTitulo(livro.getTitulo()) != null){
+            throw new LivroDuplicadoException("O livro: '" + livro.getTitulo() + "' já existe!");
+        }
+        acervo.add(livro);
     }
 
     public void removerLivro(int opcao){
@@ -27,6 +30,16 @@ public class Biblioteca {
 
     public boolean acervoVazio(){
         return acervo.isEmpty();
+    }
+
+    public Livro buscarTitulo(String titulo){
+        for (Livro livro : acervo){
+            if (livro.getTitulo().equalsIgnoreCase(titulo)){
+                return livro;
+            }
+        }
+
+        return null;
     }
 
     public void listarAcervo(){
