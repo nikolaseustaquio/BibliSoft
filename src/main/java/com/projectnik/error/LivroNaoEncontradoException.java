@@ -1,7 +1,7 @@
 package com.projectnik.error;
 
-public class LivroNaoEncontrado extends Exception{
-    public LivroNaoEncontrado(String mensagem){
+public class LivroNaoEncontradoException extends Exception{
+    public LivroNaoEncontradoException(String mensagem){
         super(mensagem);
     }
 }

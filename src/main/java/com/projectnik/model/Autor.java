@@ -1,4 +1,4 @@
-package com.projectnik;
+package com.projectnik.model;
 
 public class Autor {
     private String nome;
@@ -16,5 +16,21 @@ public class Autor {
                 Autor: %s
                 Nacionalidade: %s
                 """, nome, nacionalidade);
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getNacionalidade() {
+        return nacionalidade;
+    }
+
+    public void setNacionalidade(String nacionalidade) {
+        this.nacionalidade = nacionalidade;
     }
 }

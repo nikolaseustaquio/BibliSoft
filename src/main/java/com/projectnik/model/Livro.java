@@ -1,4 +1,4 @@
-package com.projectnik;
+package com.projectnik.model;
 
 import java.util.UUID;
 
