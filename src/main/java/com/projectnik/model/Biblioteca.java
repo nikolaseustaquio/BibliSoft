@@ -4,10 +4,7 @@ import com.projectnik.error.AcervoVazioException;
 import com.projectnik.error.LivroDuplicadoException;
 import com.projectnik.error.LivroNaoEncontradoException;
 
-import java.io.FileWriter;
-import java.io.IOError;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,12 +31,10 @@ public class Biblioteca {
     }
 
     public Livro buscarTitulo(String titulo) throws LivroNaoEncontradoException {
-        for (Livro livro : acervo){
-            if (livro.getTitulo().equalsIgnoreCase(titulo)){
-                return livro;
-            }
-        }
-        throw new LivroNaoEncontradoException("O livro: '" + titulo + "' não foi encontrado!");
+        return acervo.stream()
+                .filter(livro -> livro.getTitulo().equalsIgnoreCase(titulo))
+                .findFirst()
+                .orElseThrow(() -> new LivroNaoEncontradoException("O livro: '" + titulo + "' não foi encontrado!"));
     }
 
     private boolean livroExiste(String titulo){
@@ -86,19 +81,47 @@ public class Biblioteca {
 
     public void salvarEmArquivo(){
         boolean sucesso = false;
-        try(PrintWriter writer = new PrintWriter(new FileWriter("acervo.txt"))){
-            for (Livro livro : acervo){
+        if (acervo.isEmpty()){
+            System.out.println("Não há livros para salvar!");
+        }else {
+            try (PrintWriter writer = new PrintWriter(new FileWriter("acervo.txt"))) {
+                for (Livro livro : acervo) {
 
-                String nomeAutor = (livro.getAutor() != null) ? livro.getAutor().getNome() : "Sem autor";
-                String nacionalidade = (livro.getAutor() != null) ? livro.getAutor().getNacionalidade() : "N/A";
+                    String nomeAutor = (livro.getAutor() != null) ? livro.getAutor().getNome() : "Sem autor";
+                    String nacionalidade = (livro.getAutor() != null) ? livro.getAutor().getNacionalidade() : "N/A";
 
-                writer.println(livro.getTitulo() + ";" + nomeAutor + ";" + nacionalidade);
+                    writer.println(livro.getTitulo() + ";" + nomeAutor + ";" + nacionalidade);
+                }
+                sucesso = true;
+            } catch (IOException e) {
+                System.out.println("Erro crítico ao salvar: " + e.getMessage());
             }
-            sucesso = true;
-        }catch (IOException e){
-            System.out.println("Erro crítico ao salvar: " + e.getMessage());
-        }finally {
-            System.out.println("[LOG] Tentativa de salvamento finalizado. Status: " + (sucesso ? "Sucesso" : "Falha"));
         }
+        System.out.println("[LOG] Tentativa de salvamento finalizado. Status: " + (sucesso ? "Sucesso" : "Falha"));
+    }
+
+    public void carregarArquivo(){
+        boolean sucesso = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("acervo.txt"))){
+            String linha;
+            while ((linha = reader.readLine()) != null){
+                String[] partes = linha.split(";");
+                Autor autor;
+
+                if (partes[1].equals("Sem autor")){
+                    autor = null;
+                }else{
+                    autor = new Autor(partes[1], partes[2]);
+                }
+
+                Livro livro = new Livro(partes[0], autor);
+                acervo.add(livro);
+                sucesso = true;
+            }
+        }catch (IOException e){
+            System.out.println("Erro crítico ao carregar arquivo: " + e.getMessage());
+        }
+        System.out.println("[LOG] Tentativa de carregamento finalizado. Status: " + (sucesso ? "Sucesso" : "Falha"));
     }
 }

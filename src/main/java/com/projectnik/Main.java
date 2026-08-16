@@ -32,6 +32,8 @@ public class Main {
                     case 4 -> listarEmprestimos();
                     case 5 -> listarAcervos();
                     case 6 -> biblioteca.salvarEmArquivo();
+                    case 7 -> biblioteca.carregarArquivo();
+                    case 8 -> buscarTitulo();
                     case 0 -> encerrar();
                     default -> System.out.println("Opção Inválida");
                 }
@@ -55,6 +57,8 @@ public class Main {
                         [4] Listar os empréstimos
                         [5] Listar os livros
                         [6] Salvar Arquivo
+                        [7] Carregar Arquivo
+                        [8] Buscar por Título
                         [0] Encerrar programa
                         -------------------------------
                         """);
@@ -99,10 +103,13 @@ public class Main {
 
                 biblioteca.adicionarLivro(livro);
 
+                System.out.println("Livro adicionado com sucesso!");
+
             } else {
-                Livro livro = new Livro(titulo, null);
+                Livro livro     = new Livro(titulo, null);
                 biblioteca.adicionarLivro(livro);
 
+                System.out.println("Livro adicionado com sucesso!");
             }
         }catch (LivroDuplicadoException e){
             System.out.println(e.getMessage());
@@ -132,10 +139,6 @@ public class Main {
         String usuario = "";
         String tituloTentado = "";
         try {
-            biblioteca.listarAcervo();
-            System.out.print("Qual livro deseja fazer o emprestimo?\n-> ");
-            int e = sc.nextInt();
-            sc.nextLine();
 
             System.out.print("Usuário: ");
             usuario = sc.nextLine();
@@ -143,16 +146,26 @@ public class Main {
             System.out.print("Data de Emprestimo: ");
             String dataEmprestimo = sc.nextLine();
 
+
+            biblioteca.listarAcervo();
+            System.out.print("Qual livro deseja fazer o emprestimo?\n-> ");
+            int e = sc.nextInt();
+            sc.nextLine();
+
             biblioteca.realizarEmprestimo(e - 1, usuario, dataEmprestimo);
+
             tituloTentado = "sucesso";
-        }catch (AcervoVazioException acervoVazio){
+        }catch (AcervoVazioException acervoVazio) {
             System.out.println("Aviso: " + acervoVazio.getMessage());
+
+        }catch (IndexOutOfBoundsException index){
+            tituloTentado = "falha -> Livro não encontrado. Verifique o número digitado.";
         }catch (RuntimeException e){
-            tituloTentado = "falha: " + e.getMessage();
+            tituloTentado = "Erro crítico: " + e.getMessage();
         } finally {
-            System.out.println("[LOG] Tentativa de empréstimo - usuário: " +
-                    (usuario.isEmpty() ? "não informado" : usuario)
-                    + "| status: " + tituloTentado);
+            System.out.println("[LOG] Tentativa de empréstimo - Usuário: " +
+                    (usuario.isEmpty() ? "Não informado" : usuario)
+                    + " | STATUS: " + tituloTentado);
         }
     }
 
@@ -176,5 +189,16 @@ public class Main {
     private static void  encerrar() {
         System.out.println("Encerrando o programa!");
         System.exit(0);
+    }
+
+    private static void buscarTitulo(){
+        System.out.print("Digite o título do livro: ");
+        String titulo = sc.nextLine();
+
+        try{
+            System.out.println(biblioteca.buscarTitulo(titulo));
+        } catch (LivroNaoEncontradoException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

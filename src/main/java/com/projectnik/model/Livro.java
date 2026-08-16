@@ -17,6 +17,7 @@ public class Livro {
     public String toString() {
         String  autorDesconhecido = autor != null ? autor.toString() : "Autor desconhecido";
         return String.format("""
+                -------------------------
                 Titulo: %s
                 isbn: %s
                 %s""",  titulo, isbn, autorDesconhecido);
