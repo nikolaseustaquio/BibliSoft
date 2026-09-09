@@ -45,7 +45,7 @@ exceptions/
 
 ### Passos
 ```bash
-git clone https://github.com/[seu-usuario]/BibliotecaSoft.git
+git clone https://github.com/nikolaseustaquio/BibliotecaSoft.git
 cd BibliotecaSoft
 ```
 Abra no IntelliJ IDEA e execute a classe `Main.java`.
